@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mynodeJsapp-deployment
+  name: myjavaapp-deployment
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
-      app: mynodeJs
+      app: myjavaapp
   template:
     metadata:
       labels:
-        app: mynodeJs
+        app: myjavaapp
     spec:
       containers:
-      - name: mynodeJs
+      - name: myjavaapp
         image: 243731798106.dkr.ecr.us-east-1.amazonaws.com/jenkins-pipeline:latest
         ports:
         - containerPort: 8000
-        
+
 ---
 apiVersion: v1
 kind: Service
@@ -25,9 +25,9 @@ metadata:
   name: myjavaapp-service
 spec:
   selector:
-    app: mynodeJs
-  type: LoadBalancer
+    app: myjavaapp
   ports:
   - name: http
     port: 8000
     targetPort: 8000
+  type: LoadBalancer
