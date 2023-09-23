@@ -24,14 +24,14 @@ pipeline{
             }
         }
 
-        // stage('Unit Test Maven'){
-        // when { expression { params.action == 'create'}}
-        //     steps{
-        //         script{
-        //             mvnTest()
-        //         }
-        //     }
-        // }
+        stage('Unit Test Maven'){
+        when { expression { params.action == 'create'}}
+            steps{
+                script{
+                    mvnTest()
+                }
+            }
+        }
 
         // stage('Integration Test Maven'){
         // when { expression { params.action == 'create'}}
@@ -71,15 +71,15 @@ pipeline{
         //     }
         // }
 
-        stage('Docker Image Build'){
-        when { expression { params.action == 'create'}}
-            steps{
-                script{
+        // stage('Docker Image Build'){
+        // when { expression { params.action == 'create'}}
+        //     steps{
+        //         script{
 
-                    dockerBuild("${params.ImageName}","${params.ImageTag}","${params.dockerHubUser}")
-                }
-            }
-        }
+        //             dockerBuild("${params.ImageName}","${params.ImageTag}","${params.dockerHubUser}")
+        //         }
+        //     }
+        // }
 
         // stage('Docker Image Scan Using Trivy'){
         // when { expression { params.action == 'create'}}
