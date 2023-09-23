@@ -64,6 +64,15 @@ pipeline{
             }
         }
 
+        stage('Docker Image CleanUp'){
+        when { expression { params.action == 'create'}}
+            steps{
+                script{
+                    dockerImageCleanup("${params.aws_account_id}","${params.region}","${params.ecrRepositoryName}")
+                }
+            }
+        }
+
         stage('Create EKS Cluster: Terraform'){
         when { expression { params.action == 'create'}}
             steps{
