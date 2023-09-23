@@ -1,16 +1,24 @@
 @Library('my-shared-library') _
 pipeline{
     agent any
-    tools{
-        jdk  'jdk11'
-        maven  'maven3'
-    }
+    // tools{
+    //     jdk  'jdk11'
+    //     maven  'maven3'
+    // }
+
+    // parameters{
+    //     choice(name: 'action', choices: 'create\ndelete', description: 'Choose Create/Destroy')
+    //     string(name:'ImageName',description: 'Name of the docker build', defaultValue: 'node-js')
+    //     string(name:'ImageTag',description: 'Tag of the docker build', defaultValue: 'v1')
+    //     string(name:'dockerHubUser',description: 'Name of the Application', defaultValue: 'atinspandan')
+    // }
 
     parameters{
         choice(name: 'action', choices: 'create\ndelete', description: 'Choose Create/Destroy')
-        string(name:'ImageName',description: 'Name of the docker build', defaultValue: 'node-js')
-        string(name:'ImageTag',description: 'Tag of the docker build', defaultValue: 'v1')
-        string(name:'dockerHubUser',description: 'Name of the Application', defaultValue: 'atinspandan')
+        string(name:'aws_account_id',description: 'AWS account Id', defaultValue: '243731798106')
+        string(name:'region',description: 'Region of the ECR', defaultValue: 'us-east-1')
+        string(name:'ecrRepositoryName',description: 'Name of the ECR', defaultValue: 'jenkins-pipeline')
+        string(name:'eksClusterName',description: 'Name of the EKS cluster', defaultValue: 'eks-cluster1')
     }
 
     environment{
@@ -28,91 +36,33 @@ pipeline{
                 )
             }
         }
-
-        // stage('Unit Test Maven'){
-        // when { expression { params.action == 'create'}}
-        //     steps{
-        //         script{
-        //             mvnTest()
-        //         }
-        //     }
-        // }
-
-        // stage('Integration Test Maven'){
-        // when { expression { params.action == 'create'}}
-        //     steps{
-        //         script{
-        //             mvnIntegrationTest()
-        //         }
-        //     }
-        // }
-
-        // stage('Static code analysis: Sonarqube'){
-        // when { expression { params.action == 'create'}}
-        //     steps{
-        //         script{
-        //             def SonarQubeCredentialsId = 'sonarqube-api'
-        //             staticCodeAnalysis(SonarQubeCredentialsId)
-        //         }
-        //     }
-        // }
-
-        // stage('Quality Gate Status Check: Sonarqube'){
-        // when { expression { params.action == 'create'}}
-        //     steps{
-        //         script{
-        //             def SonarQubeCredentialsId = 'sonarqube-api'
-        //             qualityGateStatus(SonarQubeCredentialsId)
-        //         }
-        //     }
-        // }
-
-        // stage('Maven Build'){
-        // when { expression { params.action == 'create'}}
-        //     steps{
-        //         script{
-        //             mvnBuild()
-        //         }
-        //     }
-        // }
-
-        stage('Docker Image Build'){
+        stage('Docker Image Build: ECR'){
         when { expression { params.action == 'create'}}
             steps{
                 script{
 
-                    dockerBuild("${params.ImageName}","${params.ImageTag}","${params.dockerHubUser}")
+                    dockerBuild("${params.aws_account_id}","${params.region}","${params.ecrRepositoryName}")
                 }
             }
         }
 
-        stage('Docker Image Scan Using Trivy'){
+        stage('Docker Image Scan Using Trivy for AWS'){
         when { expression { params.action == 'create'}}
             steps{
                 script{
 
-                    dockerImageScan("${params.ImageName}","${params.ImageTag}","${params.dockerHubUser}")
+                    dockerImageScan("${params.aws_account_id}","${params.region}","${params.ecrRepositoryName}")
                 }
             }
         }
-
-        stage('Docker Image Scan Push: DockerHub'){
+        stage('Docker Image Scan Push: ECR'){
         when { expression { params.action == 'create'}}
             steps{
                 script{
-                    def DockerHubCred = 'docker-cred'
-                    dockerImagePush(DockerHubCred, "${params.ImageName}","${params.ImageTag}","${params.dockerHubUser}")
+                    dockerImagePush("${params.aws_account_id}","${params.region}","${params.ecrRepositoryName}")
                 }
             }
         }
 
-        // stage('Docker Image CleanUp'){
-        // when { expression { params.action == 'create'}}
-        //     steps{
-        //         script{
-        //             dockerImageCleanup("${params.ImageName}","${params.ImageTag}","${params.dockerHubUser}")
-        //         }
-        //     }
-        // }
     }
 }
