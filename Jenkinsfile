@@ -8,9 +8,14 @@ pipeline{
 
     parameters{
         choice(name: 'action', choices: 'create\ndelete', description: 'Choose Create/Destroy')
-        string(name:'ImageName',description: 'Name of the docker build', defaultValue: 'javaapp')
+        string(name:'ImageName',description: 'Name of the docker build', defaultValue: 'node-js')
         string(name:'ImageTag',description: 'Tag of the docker build', defaultValue: 'v1')
         string(name:'dockerHubUser',description: 'Name of the Application', defaultValue: 'atinspandan')
+    }
+
+    environment{
+        ACCESS_KEY = credentials('Access_key_ID')
+        SECRET_KEY = credentials('Secret_access_key')
     }
 
     stages{
@@ -24,14 +29,14 @@ pipeline{
             }
         }
 
-        stage('Unit Test Maven'){
-        when { expression { params.action == 'create'}}
-            steps{
-                script{
-                    mvnTest()
-                }
-            }
-        }
+        // stage('Unit Test Maven'){
+        // when { expression { params.action == 'create'}}
+        //     steps{
+        //         script{
+        //             mvnTest()
+        //         }
+        //     }
+        // }
 
         // stage('Integration Test Maven'){
         // when { expression { params.action == 'create'}}
@@ -71,42 +76,43 @@ pipeline{
         //     }
         // }
 
-        // stage('Docker Image Build'){
-        // when { expression { params.action == 'create'}}
-        //     steps{
-        //         script{
+        stage('Docker Image Build'){
+        when { expression { params.action == 'create'}}
+            steps{
+                script{
 
-        //             dockerBuild("${params.ImageName}","${params.ImageTag}","${params.dockerHubUser}")
-        //         }
-        //     }
-        // }
+                    dockerBuild("${params.ImageName}","${params.ImageTag}","${params.dockerHubUser}")
+                }
+            }
+        }
 
-        // stage('Docker Image Scan Using Trivy'){
-        // when { expression { params.action == 'create'}}
-        //     steps{
-        //         script{
+        stage('Docker Image Scan Using Trivy'){
+        when { expression { params.action == 'create'}}
+            steps{
+                script{
 
-        //             dockerImageScan("${params.ImageName}","${params.ImageTag}","${params.dockerHubUser}")
-        //         }
-        //     }
-        // }
-        // stage('Docker Image Scan Push: DockerHub'){
-        // when { expression { params.action == 'create'}}
-        //     steps{
-        //         script{
-        //             def DockerHubCred = 'docker-cred'
-        //             dockerImagePush(DockerHubCred, "${params.ImageName}","${params.ImageTag}","${params.dockerHubUser}")
-        //         }
-        //     }
-        // }
+                    dockerImageScan("${params.ImageName}","${params.ImageTag}","${params.dockerHubUser}")
+                }
+            }
+        }
 
-        // stage('Docker Image CleanUp'){
-        // when { expression { params.action == 'create'}}
-        //     steps{
-        //         script{
-        //             dockerImageCleanup("${params.ImageName}","${params.ImageTag}","${params.dockerHubUser}")
-        //         }
-        //     }
-        // }
+        stage('Docker Image Scan Push: DockerHub'){
+        when { expression { params.action == 'create'}}
+            steps{
+                script{
+                    def DockerHubCred = 'docker-cred'
+                    dockerImagePush(DockerHubCred, "${params.ImageName}","${params.ImageTag}","${params.dockerHubUser}")
+                }
+            }
+        }
+
+        stage('Docker Image CleanUp'){
+        when { expression { params.action == 'create'}}
+            steps{
+                script{
+                    dockerImageCleanup("${params.ImageName}","${params.ImageTag}","${params.dockerHubUser}")
+                }
+            }
+        }
     }
 }
