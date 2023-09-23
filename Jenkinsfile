@@ -36,30 +36,79 @@ pipeline{
                 )
             }
         }
-        stage('Docker Image Build: ECR'){
+        // stage('Docker Image Build: ECR'){
+        // when { expression { params.action == 'create'}}
+        //     steps{
+        //         script{
+
+        //             dockerBuild("${params.aws_account_id}","${params.region}","${params.ecrRepositoryName}")
+        //         }
+        //     }
+        // }
+
+        // stage('Docker Image Scan Using Trivy for AWS'){
+        // when { expression { params.action == 'create'}}
+        //     steps{
+        //         script{
+
+        //             dockerImageScan("${params.aws_account_id}","${params.region}","${params.ecrRepositoryName}")
+        //         }
+        //     }
+        // }
+        // stage('Docker Image Scan Push: ECR'){
+        // when { expression { params.action == 'create'}}
+        //     steps{
+        //         script{
+        //             dockerImagePush("${params.aws_account_id}","${params.region}","${params.ecrRepositoryName}")
+        //         }
+        //     }
+        // }
+
+        stage('Create EKS Cluster: Terraform'){
         when { expression { params.action == 'create'}}
             steps{
                 script{
-
-                    dockerBuild("${params.aws_account_id}","${params.region}","${params.ecrRepositoryName}")
+                    dir('EKS_module\\project') {
+                        sh """
+                            terraform init 
+                            terraform plan -var 'access_key=${ACCESS_KEY}' -var 'secret_key=${SECRET_KEY}' -var 'region=${params.region}' --var-file=../config/terraform.tfvars
+                            terraform apply -var 'access_key=${ACCESS_KEY}' -var 'secret_key=${SECRET_KEY}' -var 'region=${params.region}' --var-file=../config/terraform.tfvars -auto-approve
+                        """
+                    }
                 }
             }
         }
 
-        stage('Docker Image Scan Using Trivy for AWS'){
+        stage('Connect to EKS'){
         when { expression { params.action == 'create'}}
             steps{
                 script{
-
-                    dockerImageScan("${params.aws_account_id}","${params.region}","${params.ecrRepositoryName}")
+                    sh """
+                        aws eks --region ${params.region} update-kubeconfig --name ${params.eksClusterName}
+                    """
                 }
             }
         }
-        stage('Docker Image Scan Push: ECR'){
+
+        stage('Deployment on EKS Cluster'){
         when { expression { params.action == 'create'}}
             steps{
                 script{
-                    dockerImagePush("${params.aws_account_id}","${params.region}","${params.ecrRepositoryName}")
+                    def apply = false
+
+                    try{
+                        input message: 'Please confirm to deploy on EKS', ok: 'Ready to apply the config ?'
+                        apply = true
+                    }catch(err){
+                        apply = false
+                        currentBuild.result = 'UNSTABLE'
+                    }
+                    if (apply){
+
+                        sh """
+                            kubectl apply -f
+                        """
+                    }
                 }
             }
         }
