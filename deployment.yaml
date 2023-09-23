@@ -17,6 +17,8 @@ spec:
         image: 243731798106.dkr.ecr.us-east-1.amazonaws.com/jenkins-pipeline:latest
         ports:
         - containerPort: 8000
+          name: http
+          protocol: TCP
 
 ---
 apiVersion: v1
@@ -29,5 +31,6 @@ spec:
   ports:
   - name: http
     port: 80
+    protocol: TCP
     targetPort: 8000
   type: LoadBalancer
