@@ -36,15 +36,15 @@ pipeline{
                 )
             }
         }
-        stage('Docker Image Build: ECR'){
-        when { expression { params.action == 'create'}}
-            steps{
-                script{
+        // stage('Docker Image Build: ECR'){
+        // when { expression { params.action == 'create'}}
+        //     steps{
+        //         script{
 
-                    dockerBuild("${params.aws_account_id}","${params.region}","${params.ecrRepositoryName}")
-                }
-            }
-        }
+        //             dockerBuild("${params.aws_account_id}","${params.region}","${params.ecrRepositoryName}")
+        //         }
+        //     }
+        // }
 
         // stage('Docker Image Scan Using Trivy for AWS'){
         // when { expression { params.action == 'create'}}
