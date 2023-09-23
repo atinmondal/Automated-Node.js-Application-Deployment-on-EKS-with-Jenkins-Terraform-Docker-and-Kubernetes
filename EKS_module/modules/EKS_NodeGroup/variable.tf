@@ -1,14 +1,15 @@
-variable "eks_cluster_name" {
-     default  =  "demo-eks"
+variable "node_group_name" {
+  
 }
-
+variable "eks_cluster_name" {
+  
+}
 variable "subnet_ids" {
-     
+  
 }
 variable "tags" {
   
 }
-
-# variable "testsubnet_ids" {
+variable "node_group_role_name" {
   
-# }
+}
