@@ -79,8 +79,7 @@ pipeline{
                 script{
                     dir('EKS_module\\project') {
                         sh """
-                            // terraform init 
-                            // terraform plan -var 'access_key=${ACCESS_KEY}' -var 'secret_key=${SECRET_KEY}' -var 'region=${params.region}' --var-file=../config/terraform.tfvars
+                            terraform init 
                             terraform destroy -var 'access_key=${ACCESS_KEY}' -var 'secret_key=${SECRET_KEY}' -var 'region=${params.region}' --var-file=../config/terraform.tfvars -auto-approve
                         """
                     }
