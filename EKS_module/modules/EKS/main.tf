@@ -6,6 +6,7 @@ resource "aws_eks_cluster" "eks" {
   # the Kubernetes control plane to make calls to AWS API operations on your behalf
   role_arn = aws_iam_role.example.arn
 
+ # Must be in at least two different availability zones
   vpc_config {
     subnet_ids = var.subnet_ids
   }
@@ -31,6 +32,7 @@ data "aws_iam_policy_document" "assume_role" {
 }
 
 resource "aws_iam_role" "example" {
+  # The name of the role
   name               = var.eks_role_name
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }

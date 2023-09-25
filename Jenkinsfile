@@ -1,17 +1,6 @@
 @Library('my-shared-library') _
 pipeline{
     agent any
-    // tools{
-    //     jdk  'jdk11'
-    //     maven  'maven3'
-    // }
-
-    // parameters{
-    //     choice(name: 'action', choices: 'create\ndelete', description: 'Choose Create/Destroy')
-    //     string(name:'ImageName',description: 'Name of the docker build', defaultValue: 'node-js')
-    //     string(name:'ImageTag',description: 'Tag of the docker build', defaultValue: 'v1')
-    //     string(name:'dockerHubUser',description: 'Name of the Application', defaultValue: 'atinspandan')
-    // }
 
     parameters{
         choice(name: 'action', choices: 'create\ndelete', description: 'Choose Create/Destroy')
@@ -36,7 +25,7 @@ pipeline{
                 )
             }
         }
-        stage('Docker Image Build: ECR'){
+        stage('Docker Image Build'){
         when { expression { params.action == 'create'}}
             steps{
                 script{
@@ -46,7 +35,7 @@ pipeline{
             }
         }
 
-        stage('Docker Image Scan Using Trivy for AWS'){
+        stage('Docker Image Scan Using Trivy'){
         when { expression { params.action == 'create'}}
             steps{
                 script{
@@ -55,7 +44,7 @@ pipeline{
                 }
             }
         }
-        stage('Docker Image Scan Push: ECR'){
+        stage('Docker Image Push To ECR'){
         when { expression { params.action == 'create'}}
             steps{
                 script{
@@ -64,7 +53,7 @@ pipeline{
             }
         }
 
-        stage('Docker Image CleanUp'){
+        stage('Docker Image CleanUp From Local System'){
         when { expression { params.action == 'create'}}
             steps{
                 script{
@@ -88,7 +77,7 @@ pipeline{
             }
         }
 
-        stage('Connect to EKS'){
+        stage('Connect To EKS'){
         when { expression { params.action == 'create'}}
             steps{
                 script{
@@ -99,7 +88,7 @@ pipeline{
             }
         }
 
-        stage('Deployment on EKS Cluster'){
+        stage('Deployment of Node.js Image on EKS Cluster'){
         when { expression { params.action == 'create'}}
             steps{
                 script{
