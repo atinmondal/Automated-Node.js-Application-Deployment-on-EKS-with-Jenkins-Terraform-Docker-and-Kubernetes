@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: myjavaapp
-        image: 243731798106.dkr.ecr.us-east-1.amazonaws.com/jenkins-pipeline:latest
+        image: 243731798106.dkr.ecr.us-east-1.amazonaws.com/jenkins-pipeline:latest  #AWS ECR Image URL
         ports:
         - containerPort: 8000
           name: http
