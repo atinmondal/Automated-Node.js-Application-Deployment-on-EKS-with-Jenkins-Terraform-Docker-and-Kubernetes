@@ -1,5 +1,9 @@
 :large_blue_circle: Automated Node.js Application Deployment on EKS with Jenkins, Terraform, Docker, and Kubernetes
 
+:large_green_circle:Project Blueprint
+![Jenkins_pipeline-Page-1 drawio (1)](https://github.com/atinmondal/Jenkins_pipeline_nodejsApplication/assets/70535896/5c92ed89-968e-485d-8f52-991db7a54779)
+
+
 # Project Description:
 In this endeavor, we will present a thorough and automated process for deploying a Node.js application onto an Amazon Elastic Kubernetes Service (EKS) cluster using Jenkins. Our methodology encompasses the creation of Jenkins pipeline stages, the establishment of the EKS cluster using Terraform, the containerization of the Node.js application through a Dockerfile, and the coordination of its deployment within the Kubernetes cluster via deployment code. 
 Notable Project Features:
