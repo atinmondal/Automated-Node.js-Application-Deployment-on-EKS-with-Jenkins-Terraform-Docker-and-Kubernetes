@@ -8,4 +8,11 @@ Notable Project Features:
 1. A simple Node application (Application should render static site/content, no
 database connection needed)
 2. An AWS account (Personal account)
+URL for the Blog - 
 
+★ Here's the ultimate overview of the Jenkins pipeline stages, where we've accomplished the successful deployment of our Node.js application into the EKS cluster.
+
+![Screenshot (42)](https://github.com/atinmondal/Jenkins_pipeline_nodejsApplication/assets/70535896/d7d4e2c1-8871-4b74-aba2-a480cffcafd4)
+
+★ Node.js application
+![Screenshot (43)](https://github.com/atinmondal/Jenkins_pipeline_nodejsApplication/assets/70535896/300f5dcb-4550-4959-afc9-4f8dfc81e0ca)
