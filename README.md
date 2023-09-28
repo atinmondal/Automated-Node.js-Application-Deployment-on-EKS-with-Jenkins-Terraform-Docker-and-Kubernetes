@@ -1,6 +1,6 @@
 :large_blue_circle: Automated Node.js Application Deployment on EKS with Jenkins, Terraform, Docker, and Kubernetes
 
-:large_green_circle:Project Blueprint
+:large_green_circle: Project Blueprint
 ![Jenkins_pipeline-Page-1 drawio (1)](https://github.com/atinmondal/Jenkins_pipeline_nodejsApplication/assets/70535896/5c92ed89-968e-485d-8f52-991db7a54779)
 
 
