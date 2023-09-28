@@ -13,7 +13,7 @@ Notable Project Features:
 database connection needed)
 2. An AWS account (Personal account)
 
-URL for the Blog - https://medium.com/@atinmondal045/d9d7373dd772
+URL for the Blog - https://medium.com/@atincse/d9d7373dd772
 
 ★ Here's the ultimate overview of the Jenkins pipeline stages, where we've accomplished the successful deployment of our Node.js application into the EKS cluster.
 
